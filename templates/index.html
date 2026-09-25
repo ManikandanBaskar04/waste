@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WasteLess AI</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Inter,system-ui,sans-serif;color:#eaf7ff;background:radial-gradient(circle at 15% 15%,rgba(53,198,255,.15),transparent 30%),radial-gradient(circle at 85% 85%,rgba(111,255,210,.1),transparent 30%),#06121f;display:grid;place-items:center;padding:24px}
+.app{width:min(1050px,100%);height:min(760px,92vh);display:grid;grid-template-columns:280px 1fr;background:rgba(12,31,49,.82);border:1px solid rgba(104,203,255,.18);border-radius:28px;overflow:hidden;box-shadow:0 30px 100px rgba(0,0,0,.45);backdrop-filter:blur(22px)}
+.side{padding:30px 23px;border-right:1px solid rgba(104,203,255,.18);background:linear-gradient(160deg,rgba(8,34,54,.9),rgba(5,20,33,.7));display:flex;flex-direction:column;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px}.icon{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(145deg,#35c6ff,#6fffd2);color:#04202c;font-size:22px}h1{font-size:20px;margin:0}.tag{color:#8da8bb;line-height:1.6;font-size:13px;margin:28px 0}.scope{padding:17px;border:1px solid rgba(104,203,255,.18);border-radius:19px;background:rgba(255,255,255,.025)}.scope b{color:#6fffd2}.scope p{color:#8da8bb;font-size:12px;line-height:1.6;margin-bottom:0}.foot{font-size:10px;color:#668195}
+.chat{display:flex;flex-direction:column;min-width:0}.top{padding:21px 25px;border-bottom:1px solid rgba(104,203,255,.18);display:flex;justify-content:space-between}.status{font-size:12px;color:#8da8bb}.dot{display:inline-block;width:8px;height:8px;background:#6fffd2;border-radius:50%;margin-right:6px;box-shadow:0 0 12px #6fffd2}
+.messages{flex:1;overflow-y:auto;padding:30px;display:flex;flex-direction:column;gap:15px}.msg{max-width:78%;padding:14px 17px;border-radius:18px;line-height:1.55;font-size:14px;white-space:pre-wrap}.bot{align-self:flex-start;background:rgba(255,255,255,.055);border:1px solid rgba(104,203,255,.18);border-bottom-left-radius:6px}.user{align-self:flex-end;background:linear-gradient(135deg,#12627f,#0d4560);border-bottom-right-radius:6px}
+.composer{padding:18px 22px 22px;border-top:1px solid rgba(104,203,255,.18)}form{display:flex;gap:10px;padding:8px;border:1px solid rgba(104,203,255,.18);border-radius:20px;background:rgba(255,255,255,.035)}textarea{flex:1;resize:none;border:0;outline:0;background:transparent;color:#eaf7ff;padding:11px;font:inherit;min-height:46px}textarea::placeholder{color:#668195}button{width:48px;border:0;border-radius:15px;background:linear-gradient(145deg,#35c6ff,#6fffd2);color:#04202c;font-size:18px;cursor:pointer}.hint{text-align:center;color:#557084;font-size:10px;margin-top:9px}
+@media(max-width:760px){body{padding:0}.app{height:100vh;border-radius:0;grid-template-columns:1fr}.side{display:none}.msg{max-width:88%}}
+</style>
+</head>
+<body>
+<main class="app">
+<aside class="side">
+<div>
+<div class="brand"><div class="icon">✦</div><h1>WasteLess AI</h1></div>
+<p class="tag">A focused AI study companion designed exclusively for Waste Management.</p>
+<div class="scope"><b>Study Scope</b><p>Ask concepts, definitions, examples, applications, comparisons, and other educational questions related to Waste Management.</p></div>
+</div>
+<div class="foot">Domain-focused AI • Waste Management</div>
+</aside>
+<section class="chat">
+<header class="top"><strong>Waste Management Assistant</strong><span class="status"><i class="dot"></i>Online</span></header>
+<div class="messages" id="messages"><div class="msg bot">Hi! I’m WasteLess AI. Ask me anything related to Waste Management, and I’ll help you study it clearly.</div></div>
+<div class="composer"><form id="form"><textarea id="input" rows="1" placeholder="Ask a Waste Management question..." required></textarea><button type="submit">➤</button></form><div class="hint">This chatbot answers only Waste Management-related questions.</div></div>
+</section>
+</main>
+<script>
+const form=document.getElementById("form"),input=document.getElementById("input"),messages=document.getElementById("messages");
+function add(text,type){const d=document.createElement("div");d.className="msg "+type;d.textContent=text;messages.appendChild(d);messages.scrollTop=messages.scrollHeight}
+form.addEventListener("submit",async e=>{e.preventDefault();const message=input.value.trim();if(!message)return;add(message,"user");input.value="";try{const r=await fetch("/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message})});const d=await r.json();add(d.reply||d.error,"bot")}catch{add("Sorry, I couldn't process that request. Please try again.","bot")}});
+input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
+</script>
+</body>
+</html>
